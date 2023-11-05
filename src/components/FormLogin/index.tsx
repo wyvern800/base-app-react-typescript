@@ -1,10 +1,10 @@
-import { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useHistory, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useEffect } from 'react';
 import { Form, Login } from './styles';
 
 import FormField from '../FormField';
@@ -13,13 +13,24 @@ import auth from '../../services/auth';
 
 import { useUserData } from '../../contexts/UserData';
 
-const FormLogin = (): ReactElement => {
+const FormLogin = (): any => {
   const history = useHistory();
 
   const { userData } = useUserData();
 
+  // If user is already logged in, push him
+  useEffect(() => {
+    const check = () => {
+      if (localStorage.getItem(auth.tokenKey)) {
+        history.push('/admin');
+      }
+    };
+    check();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const validationSchema = yup.object().shape({
-    email: yup.string().required('E-mail/login inválido'),
+    username: yup.string().required('E-mail/login inválido'),
     password: yup
       .string()
       .max(32, 'Sua senha só pode ter no máximo 32 caracteres!')
@@ -39,25 +50,26 @@ const FormLogin = (): ReactElement => {
    */
   const onSubmit = async (data: any) => {
     await auth
-      .login(data?.email, data?.password)
+      .login(data?.username, data?.password)
       .then((response: any) => {
         history.push('/admin');
-        localStorage.setItem('token', response?.data?.accessToken);
+        localStorage.setItem('acessToken', response?.data?.accessToken);
 
         toast.success('You successfully logged in!');
       })
       .catch(err => {
-        toast.error('Invalid credentials');
+        const { error } = err.response.data;
+        toast.error(error);
       });
   };
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormField
-        name="email"
-        label="E-mail/Username"
+        name="username"
+        label="Username"
         register={register}
-        error={errors.email?.message}
+        error={errors.username?.message}
         setValueFormState={setValue}
         width="100%"
       />
@@ -69,6 +81,7 @@ const FormLogin = (): ReactElement => {
         error={errors.password?.message}
         setValueFormState={setValue}
         width="100%"
+        marginBottom="15px"
       />
       <Link to="/register">Not registered yet? click to register</Link>
       <Login type="submit">Login</Login>

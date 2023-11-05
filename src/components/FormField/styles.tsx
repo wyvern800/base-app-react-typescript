@@ -3,6 +3,7 @@ import styled from 'styled-components';
 type WrapperProps = {
   width?: string;
   marginLeft?: string;
+  marginBottom?: string;
 };
 
 export const Field = styled.div`
@@ -47,6 +48,7 @@ export const LabelInput = styled.label`
   font-size: 1.2rem;
   font-family: 'Inconsolata-Bold', monospace;
   font-weight: bold;
+  margin-bottom: 15px;
 
   @media (max-width: 920px) {
     font-size: 1.2rem;
@@ -59,6 +61,7 @@ export const Wrapper = styled.div<WrapperProps>`
   flex-direction: column;
   width: ${props => props.width && props.width};
   margin-left: ${props => props.marginLeft && props.marginLeft};
+  margin-bottom: ${props => props.marginBottom && props.marginBottom};
 
   @media (max-width: 600px) {
     width: 100%;

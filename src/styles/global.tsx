@@ -49,5 +49,10 @@ export default createGlobalStyle`
 
     max-width: 100%;
     overflow-x: hidden;
+
+    // Make whole website centralized
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;

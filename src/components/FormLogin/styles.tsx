@@ -5,6 +5,8 @@ export const Form = styled.form`
   flex-direction: column;
   align-items: center;
   margin: 3%;
+  width: 100%;
+  min-width: 50vw;
 `;
 
 export const Login = styled.button`

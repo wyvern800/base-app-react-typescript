@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 
 import * as yup from 'yup';
@@ -11,7 +10,7 @@ import FormField from '../FormField';
 
 import auth from '../../services/auth';
 
-const FormRegister = (): ReactElement => {
+const FormRegister = (): any => {
   const history = useHistory();
   const validationSchema = yup.object().shape({
     username: yup
@@ -22,11 +21,11 @@ const FormRegister = (): ReactElement => {
     emailConfirmation: yup
       .string()
       .email()
-      .oneOf([yup.ref('email'), null], 'Emails must match'),
+      .oneOf([yup.ref('email'), null], 'Emails must match'), */
     password: yup
       .string()
       .required('Please enter your password.')
-      .max(15, 'Sua senha só pode ter no máximo 32 caracteres!'), */
+      .max(15, 'Sua senha só pode ter no máximo 32 caracteres!'),
     passwordConfirmation: yup
       .string()
       .max(15, 'Sua senha só pode ter no máximo 32 caracteres!')
@@ -57,7 +56,11 @@ const FormRegister = (): ReactElement => {
         history.push('/login');
       })
       .catch(err => {
-        // TODO: handle errors
+        const errorList = err.response.data?.errors;
+
+        if (errorList?.length) {
+          toast.error(errorList[0].msg);
+        }
       });
   };
 
@@ -69,6 +72,7 @@ const FormRegister = (): ReactElement => {
         register={register}
         error={errors.username?.message}
         setValueFormState={setValue}
+        width="100%"
       />
       <FormFieldContainer>
         <FormField
@@ -78,7 +82,7 @@ const FormRegister = (): ReactElement => {
           register={register}
           error={errors.password?.message}
           setValueFormState={setValue}
-          width="45%"
+          width="100%"
         />
         <FormField
           name="passwordConfirmation"
@@ -87,7 +91,7 @@ const FormRegister = (): ReactElement => {
           register={register}
           error={errors.passwordConfirmation?.message}
           setValueFormState={setValue}
-          width="45%"
+          width="100%"
           margin_left="20px"
         />
       </FormFieldContainer>

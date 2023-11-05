@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import api from '../api';
 
-export const tokenKey = 'token';
+export const tokenKey = 'acessToken';
 
 /**
  * Function used to check if user is logged in or not
@@ -24,20 +25,13 @@ const getCurrentUser = async (): Promise<unknown> => {
 /**
  * Checks if user is admin or normal member
  */
-const isUserAdmin = async (): Promise<unknown> => {
-  const response = await api.get(`/authadmin`, {
-    headers: {
-      Authorization: localStorage.getItem(tokenKey),
+const checkUserPermission = async (): Promise<unknown> => {
+  const response = await api.post(`/auth/permissions`, {
+    params: {
+      acessToken: localStorage.getItem(tokenKey),
     },
   });
   return response;
-};
-
-/**
- * Clears the token from user's storage
- */
-const clearToken = async (): Promise<void> => {
-  localStorage.removeItem(tokenKey);
 };
 
 /**
@@ -47,32 +41,21 @@ const clearToken = async (): Promise<void> => {
  * @param {string} password User's password
  */
 const login = async (username: string, password: string): Promise<unknown> => {
-  const response = await api
-    .post('/auth/login', {
-      username,
-      password,
-    })
-    .catch(() => {
-      clearToken();
-    });
+  const response = await api.post('/auth/login', {
+    username,
+    password,
+  });
   return response;
 };
 
 /**
  * Triggered when we're logging out
  */
-const logout = async (): Promise<void> => {
-  const response = await api
-    .post('/auth/login', {
-      headers: {
-        Authorization: localStorage.getItem(tokenKey),
-      },
-    })
-    .then(() => {
-      clearToken();
-    })
-    .catch(() => console.error('API error'));
-  return response;
+const logout = (pushToLogin: any): void => {
+  localStorage.removeItem(tokenKey);
+  if (pushToLogin) {
+    pushToLogin();
+  }
 };
 
 /**
@@ -93,10 +76,10 @@ const registerUser = async (data: unknown): Promise<unknown> => {
 
 export default {
   login,
-  clearToken,
   logout,
   getCurrentUser,
   isUserLogged,
-  isUserAdmin,
+  checkUserPermission,
   registerUser,
+  tokenKey,
 };

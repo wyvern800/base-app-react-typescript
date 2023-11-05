@@ -7,9 +7,14 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard';
 import Repository from './pages/Repository';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Logout from './pages/Logout';
+
+import Main from './components/Main';
 
 const PrivateRoute = ({ component: Component, ...rest }: any) => {
-  const isAuthenticate = localStorage.getItem('auth_token');
+  const isAuthenticate = localStorage.getItem('acessToken');
   return (
     <Route
       {...rest}
@@ -30,9 +35,21 @@ const Routes: React.FC = () => (
   <Switch>
     <Route path="/" exact component={Dashboard} />
     <Route path="/repository" component={Repository} />
+    <Route path="/login" component={Login} />
+    <Route path="/register" component={Register} />
+    {/* Rotas privadas */}
+    <PrivateRoute path="/profile" component={Main} />
+    <PrivateRoute path="/admin" component={Main} />
+    h
+    <Route exact path="/logout" component={Logout} />
   </Switch>
 );
 
+/**
+ * Here are the private routes
+ *
+ * @param userData The user data
+ */
 export const PrivateRoutes = ({ userData }: any): any => (
   <>
     {userData.role === 'admin' && (

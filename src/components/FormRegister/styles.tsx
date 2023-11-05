@@ -5,6 +5,8 @@ export const Form = styled.form`
   flex-direction: column;
   align-items: center;
   margin: 3%;
+  gap: 15px;
+  width: 50vw;
 `;
 
 export const Login = styled.button`
@@ -33,6 +35,9 @@ export const FormFieldContainer = styled.div`
   align-content: center;
   padding-top: 5px;
   padding-bottom: 5px;
+  gap: 15px;
+  width: 100%;
+  margin-bottom: 15px;
 
   @media (max-width: 600px) {
     flex-direction: column;

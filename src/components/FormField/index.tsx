@@ -16,6 +16,7 @@ const FormField = ({
   register,
   setValueFormState = () => {},
   error,
+  marginBottom,
 }: any) => {
   const [value, setValue] = useState(() => {
     const newVal = defaultValue;
@@ -31,7 +32,7 @@ const FormField = ({
   };
 
   return (
-    <Wrapper width={width} marginLeft={marginLeft}>
+    <Wrapper width={width} marginLeft={marginLeft} marginBottom={marginBottom}>
       <LabelInput>{label ?? ''}:</LabelInput>
       <Input
         type={type}

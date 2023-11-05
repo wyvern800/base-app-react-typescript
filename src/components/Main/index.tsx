@@ -14,31 +14,19 @@ const Main = (): ReactElement => {
 
   const history = useHistory();
 
-  const getRole = (role: number) => {
-    switch (role) {
-      case 2:
-        return 'admin';
-      default:
-        return 'user';
-    }
-  };
-
   // Effect that authenticates the user
   useEffect(() => {
     async function get() {
       if (!userData) {
-        await authService
-          .isUserAdmin()
-          .catch((e: any) => console.error(e.message))
-          .then((response: any) => {
-            const { role } = response?.data;
+        await authService.checkUserPermission().then((response: any) => {
+          const { role } = response?.data;
 
-            // Sets the user type
-            setUserData({
-              ...userData,
-              role: getRole(role),
-            });
+          // Sets the user type
+          setUserData({
+            ...userData,
+            role,
           });
+        });
       }
     }
     get();
